@@ -14,17 +14,17 @@ COPY . .
 # Scala CLI config and compile server
 RUN scala-cli clean .
 RUN scala-cli config power true
-RUN scala-cli package . -o -f my-server.jar
+RUN scala-cli package . -o -f scala-server.jar
 
 # Prod stage
 FROM gcr.io/distroless/java
 
 # Set workdir and copy jar
 WORKDIR /app
-COPY --from=builder /app/my-server.jar .
+COPY --from=builder /app/scala-server.jar .
 
 # Expose port
 EXPOSE 8080
 
 # Run server
-CMD ["my-server.jar"]
+CMD ["scala-server.jar"]

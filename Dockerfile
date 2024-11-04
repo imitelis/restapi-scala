@@ -5,10 +5,10 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY myapp.jar .
+COPY my-server.jar .
 
 # Expose port 8080
 EXPOSE 8080
 
 # Command to run the JAR file
-CMD ["java", "-jar", "myapp.jar"]
+CMD ["java", "-jar", "my-server.jar"]

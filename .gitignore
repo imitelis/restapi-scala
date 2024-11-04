@@ -6,4 +6,5 @@
 src/.bsp/
 src/.scala-build/
 
-meals.sqlite
+meals.db
+server.jar

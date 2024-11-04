@@ -1,5 +1,9 @@
 // project.scala
+
+// language
 //> using scala 3.5.1
+
+// dependencies
 //> using dep com.softwaremill.sttp.tapir::tapir-core:1.11.7
 //> using dep com.softwaremill.sttp.tapir::tapir-http4s-server:1.11.7
 //> using dep com.softwaremill.sttp.tapir::tapir-jsoniter-scala:1.11.7
@@ -11,3 +15,9 @@
 //> using dep com.typesafe.slick::slick:3.5.2
 //> using dep com.typesafe.slick::slick-hikaricp:3.5.2
 //> using dep org.xerial:sqlite-jdbc:3.47.0.0
+
+// files
+//> using file ./config/
+//> using file ./bases/
+//> using file ./models/
+//> using file ./routers/

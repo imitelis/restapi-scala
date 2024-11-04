@@ -11,7 +11,7 @@ import models._
 
 object DatabaseConfig {
   // Database URL
-  val dbUrl = "jdbc:sqlite:meals.sqlite"
+  val dbUrl = "jdbc:sqlite:meals.db"
 
   // Load SQLite JDBC driver
   Class.forName("org.sqlite.JDBC")

@@ -1,9 +1,5 @@
 
 // main.scala
-//> using file ./config/
-//> using file ./bases/
-//> using file ./models/
-//> using file ./routers/
 
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.syntax.all.*

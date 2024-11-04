@@ -8,3 +8,5 @@ src/.scala-build/
 
 meals.db
 server.jar
+
+*.jar

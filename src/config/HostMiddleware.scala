@@ -1,12 +1,12 @@
-package config
+// WIP
+/* 
 
+package config
 import org.http4s.*
 import cats.effect.IO
 import cats.data.Kleisli
 import org.http4s.headers.{Host}
 
-// WIP
-/* 
 object HostMiddleware {
 
   def checkHost(expectedHost: String): HttpRoutes[IO] => HttpRoutes[IO] = { routes =>

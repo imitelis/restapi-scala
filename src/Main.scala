@@ -14,10 +14,10 @@ import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import config._
 import bases._
-import routers._
+import controllers._
 
 object main extends IOApp:
-  val serverEndpoints = List(MealRouter.mealEndpoint)
+  val serverEndpoints = List(GreetController.helloEndpoint, MealController.mealEndpoint)
 
   val serverRoutes: HttpRoutes[IO] = Http4sServerInterpreter[IO]()
     .toRoutes(serverEndpoints)

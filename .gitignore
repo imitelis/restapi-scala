@@ -6,7 +6,6 @@
 src/.bsp/
 src/.scala-build/
 
-meals.db
-server.jar
+*.db
 
 *.jar

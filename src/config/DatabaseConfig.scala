@@ -9,21 +9,32 @@ import scala.concurrent.duration._
 
 import models._
 
+import slick.jdbc.SQLiteProfile.api._
+import slick.dbio.DBIO
+import scala.concurrent.{Await, Future}
+import java.sql.Connection
+import java.sql.DriverManager
+
 object DatabaseConfig {
-  // Database URL
+  // Database URL for SQLite
   val dbUrl = "jdbc:sqlite:meals.db"
 
   // Load SQLite JDBC driver
   Class.forName("org.sqlite.JDBC")
 
-  // Create a connection to the database (this will create the file if it doesn't exist)
+  // Create a database connection
   def createConnection(): Connection = {
     DriverManager.getConnection(dbUrl)
   }
 
-  // Create the meals table
+  // Create and return a Slick Database instance
+  def getDatabase(): Database = {
+    Database.forURL(dbUrl, driver = "org.sqlite.JDBC")
+  }
+
+  // Create the meals table if it doesn't already exist
   def createTables(): Unit = {
-    val db = Database.forURL(dbUrl, driver = "org.sqlite.JDBC")
+    val db = getDatabase()
     
     // Run the migration to create the table
     val setup = DBIO.seq(
@@ -32,7 +43,7 @@ object DatabaseConfig {
 
     // Execute the setup action
     val setupFuture = db.run(setup)
-    Await.result(setupFuture, 2.seconds) // Wait for the setup to complete
+    Await.result(setupFuture, scala.concurrent.duration.Duration(2, "seconds")) // Wait for the setup to complete
 
     db.close() // Close the database connection
   }

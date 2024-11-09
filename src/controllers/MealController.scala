@@ -7,21 +7,22 @@ import cats.effect.{ExitCode, IO, IOApp}
 
 import scala.util.Random
 
+import config._
 import bases._
 import services._
 
 object MealController {
-  val random = new Random
 
-  val mealEndpoint = endpoint.post
-  .in("meals")
-  .in(jsonBody[Meal])
-  .out(jsonBody[Nutrition])
-  .serverLogic[IO] { meal =>
-    MealService.getNutrition(meal).map {
-        case Right(nutritionInfo) => Right(nutritionInfo)
-        case Left(errorMessage)   => Left(())
+  val postEndpoint = endpoint.post
+    .in("meals")
+    .in(jsonBody[Meal])  // Accept a Meal object in the request body
+    .out(jsonBody[Meal])  // Return the created Meal as response
+    .serverLogic[IO] { meal =>
+      // Call MealService to insert the meal and return the result
+      MealService.postMeal(meal).map {
+        case Right(createdMeal) => Right(createdMeal)  // Return the created meal
+        case Left(errorMessage) => Left(())  // Handle error (you could improve this with more detailed error handling)
       }
-  }
-  .tag("meals")
+    }
+    .tag("meals")
 }

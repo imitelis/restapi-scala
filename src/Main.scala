@@ -17,7 +17,7 @@ import bases._
 import controllers._
 
 object main extends IOApp:
-  val serverEndpoints = List(GreetController.helloEndpoint, MealController.mealEndpoint)
+  val serverEndpoints = List(GreetController.helloEndpoint, MealController.postEndpoint)
 
   val serverRoutes: HttpRoutes[IO] = Http4sServerInterpreter[IO]()
     .toRoutes(serverEndpoints)

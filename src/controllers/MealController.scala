@@ -10,6 +10,7 @@ import scala.util.Random
 import config._
 import bases._
 import services._
+import repositories._
 
 object MealController {
 

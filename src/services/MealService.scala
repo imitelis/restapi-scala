@@ -3,6 +3,7 @@ package services
 import bases._
 import models._
 import config._
+import repositories._
 
 import cats.effect.{ExitCode, IO, IOApp}
 import slick.jdbc.SQLiteProfile.api._
@@ -17,15 +18,9 @@ object MealService {
   // Database instance
   val db = DatabaseConfig.getDatabase()
 
-  // Insert meal DBIO action
-  def insertMeal(meal: Meal): DBIO[Int] = {
-    val query = TableQuery[Meals]  // Assuming Meals is the table
-    query += meal  // This will insert the meal into the database
-  }
-
   // Service method to insert a meal and return an IO
   def postMeal(meal: Meal): IO[Either[String, Meal]] = {
-    val insertMealAction = insertMeal(meal)
+    val insertMealAction = MealRepository.insertMeal(meal)
 
     IO.fromFuture(IO {
       db.run(insertMealAction).transform {

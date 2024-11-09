@@ -24,3 +24,4 @@
 //> using file ./controllers/
 //> using file ./models/
 //> using file ./services/
+//> using file ./repositories/

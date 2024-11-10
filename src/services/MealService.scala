@@ -9,6 +9,7 @@ import cats.effect.{ExitCode, IO, IOApp}
 import slick.jdbc.SQLiteProfile.api._
 
 import scala.concurrent.ExecutionContext
+import scala.util.{Success, Failure}
 
 // Define an implicit ExecutionContext for async operations
 implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
@@ -24,8 +25,19 @@ object MealService {
 
     IO.fromFuture(IO {
       db.run(insertMealAction).transform {
-        case scala.util.Success(_) => scala.util.Success(Right(meal))  // Successfully inserted
-        case scala.util.Failure(ex) => scala.util.Success(Left(s"Error inserting meal: ${ex.getMessage}"))  // Handle error
+        case Success(_) => Success(Right(meal))  // Successfully inserted
+        case Failure(ex) => Success(Left(s"Error inserting meal: ${ex.getMessage}"))  // Handle error
+      }
+    })
+  }
+
+  def getMeals(): IO[Either[String, Seq[Meal]]] = {
+    val getAllMealsAction = MealRepository.getAllMeals()
+
+    IO.fromFuture(IO {
+      db.run(getAllMealsAction).transform {
+        case Success(meals) => Success(Right(meals))  // Successfully fetched the meals
+        case Failure(ex)   => Success(Left(s"Error fetching meals: ${ex.getMessage}"))  // Handle error
       }
     })
   }

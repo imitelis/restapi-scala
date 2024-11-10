@@ -1,9 +1,12 @@
 package controllers
 
 import sttp.tapir._
-import sttp.tapir.json.jsoniter.* // needed for jsonBody
 import cats.syntax.all.*
 import cats.effect.{ExitCode, IO, IOApp}
+
+import io.circe.generic.auto._  // For automatic Encoder/Decoder derivation
+import sttp.tapir.json.circe._  // For Tapir-Circe integration
+import sttp.tapir.generic.auto._  // <-- Add this import for automatic Schema derivation
 
 import bases._
 import services._

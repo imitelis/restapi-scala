@@ -2,6 +2,7 @@ package models
 
 import slick.jdbc.{JdbcType, SQLiteProfile}
 import slick.jdbc.SQLiteProfile.api._
+
 import scala.util.Try
 
 import bases._

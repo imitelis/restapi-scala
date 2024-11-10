@@ -35,7 +35,7 @@ object DatabaseConfig {
   // Create the meals table if it doesn't already exist
   def createTables(): Unit = {
     val db = getDatabase()
-    
+
     // Run the migration to create the table
     val setup = DBIO.seq(
       Meals.query.schema.createIfNotExists // Create table if it doesn't exist
@@ -43,7 +43,10 @@ object DatabaseConfig {
 
     // Execute the setup action
     val setupFuture = db.run(setup)
-    Await.result(setupFuture, scala.concurrent.duration.Duration(2, "seconds")) // Wait for the setup to complete
+    Await.result(
+      setupFuture,
+      scala.concurrent.duration.Duration(2, "seconds")
+    ) // Wait for the setup to complete
 
     db.close() // Close the database connection
   }

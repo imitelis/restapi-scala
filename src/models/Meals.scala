@@ -10,14 +10,14 @@ import bases._
 // Custom JdbcType for List[String]
 implicit val listStringType: JdbcType[List[String]] =
   MappedColumnType.base[List[String], String](
-    list => list.mkString(","), // Convert List to String
+    list => list.mkString(","),  // Convert List to String
     str => str.split(",").toList // Convert String back to List
   )
 
 // Define the Slick table for Meal
 class Meals(tag: Tag) extends Table[Meal](tag, "meals") {
-  def name = column[String]("name")
-  def servings = column[Int]("servings")
+  def name        = column[String]("name")
+  def servings    = column[Int]("servings")
   def ingredients = column[List[String]]("ingredients") // Using List as JSON
 
   // Use a custom tuple conversion

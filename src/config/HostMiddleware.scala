@@ -1,5 +1,5 @@
 // WIP
-/* 
+/*
 
 package config
 import org.http4s.*
@@ -20,4 +20,4 @@ object HostMiddleware {
     }
   }
 }
-*/
+ */

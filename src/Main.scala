@@ -1,4 +1,3 @@
-
 // Main.scala
 
 import cats.effect.{ExitCode, IO, IOApp}
@@ -17,7 +16,7 @@ import bases._
 import controllers._
 
 object Main extends IOApp:
-  val serverEndpoints = List(GreetController.helloEndpoint, MealController.postEndpoint, MealController.getEndpoint)
+  val serverEndpoints = GreetController.greetEndpoints ++ MealController.mealEndpoints
 
   val serverRoutes: HttpRoutes[IO] = Http4sServerInterpreter[IO]()
     .toRoutes(serverEndpoints)

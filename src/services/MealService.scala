@@ -25,8 +25,8 @@ object MealService {
 
     IO.fromFuture(IO {
       db.run(insertMealAction).transform {
-        case Success(_) => Success(Right(meal))  // Successfully inserted
-        case Failure(ex) => Success(Left(s"Error inserting meal: ${ex.getMessage}"))  // Handle error
+        case Success(_)  => Success(Right(meal))                                     // Successfully inserted
+        case Failure(ex) => Success(Left(s"Error inserting meal: ${ex.getMessage}")) // Handle error
       }
     })
   }
@@ -36,8 +36,8 @@ object MealService {
 
     IO.fromFuture(IO {
       db.run(getAllMealsAction).transform {
-        case Success(meals) => Success(Right(meals))  // Successfully fetched the meals
-        case Failure(ex)   => Success(Left(s"Error fetching meals: ${ex.getMessage}"))  // Handle error
+        case Success(meals) => Success(Right(meals))                                    // Successfully fetched the meals
+        case Failure(ex)    => Success(Left(s"Error fetching meals: ${ex.getMessage}")) // Handle error
       }
     })
   }

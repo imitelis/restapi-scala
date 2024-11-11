@@ -6,6 +6,5 @@
 src/.bsp/
 src/.scala-build/
 
-*.db
-
+# *.db
 *.jar

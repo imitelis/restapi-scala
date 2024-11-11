@@ -3,6 +3,7 @@ package models
 import slick.jdbc.{JdbcType, SQLiteProfile}
 import slick.jdbc.SQLiteProfile.api._
 
+import java.util.UUID
 import scala.util.Try
 
 import bases._
@@ -16,20 +17,23 @@ implicit val listStringType: JdbcType[List[String]] =
 
 // Define the Slick table for Meal
 class Meals(tag: Tag) extends Table[Meal](tag, "meals") {
-  def name        = column[String]("name")
-  def servings    = column[Int]("servings")
-  def ingredients = column[List[String]]("ingredients") // Using List as JSON
 
-  // Use a custom tuple conversion
-  def * = (name, servings, ingredients) <> (fromRow, toRow)
+  def id = column[UUID]("id", O.PrimaryKey)
+  def name = column[String]("name")
+  def servings = column[Int]("servings")
+  def ingredients = column[List[String]]("ingredients")
 
-  // Custom methods to convert to/from tuple
-  private def fromRow: ((String, Int, List[String])) => Meal = {
-    case (name, servings, ingredients) => Meal(name, servings, ingredients)
+  // Mapping the row to Meal case class
+  def * = (id, name, servings, ingredients) <> (fromRow, toRow)
+
+  // Convert from Row (handle Option[UUID])
+  private def fromRow: ((UUID, String, Int, List[String])) => Meal = {
+    case (id, name, servings, ingredients) => Meal(id, name, servings, ingredients)
   }
 
-  private def toRow: Meal => (String, Int, List[String]) = { meal =>
-    (meal.name, meal.servings, meal.ingredients)
+  // Convert to Row (handle Option[UUID] properly)
+  private def toRow: Meal => (UUID, String, Int, List[String]) = { meal =>
+    (meal.id, meal.name, meal.servings, meal.ingredients)
   }
 }
 

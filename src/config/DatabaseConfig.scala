@@ -1,19 +1,19 @@
 // src/config/Database.scala
 package config
 
-import java.sql.{Connection, DriverManager}
-
+import slick.dbio.DBIO
 import slick.jdbc.SQLiteProfile.api._
-import scala.concurrent.Await
-import scala.concurrent.duration._
 
 import models._
 
-import slick.jdbc.SQLiteProfile.api._
-import slick.dbio.DBIO
+import java.sql.{Connection, DriverManager}
+import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import java.sql.Connection
-import java.sql.DriverManager
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.{global}
+
+// Define an implicit ExecutionContext for async operations
+implicit val ec: ExecutionContext = global
 
 object DatabaseConfig {
   // Database URL for SQLite

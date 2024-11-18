@@ -1,10 +1,12 @@
-.bsp/
-.metals/
+# ide
 .vscode/
-.scala-build/
 
-src/.bsp/
-src/.scala-build/
+# deps
+.metals/
 
-# *.db
-*.jar
+# build
+target/
+
+# project
+project/project/
+project/target/

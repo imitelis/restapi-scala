@@ -1,4 +1,6 @@
-// Main.scala
+// src/Main.scala
+
+package src
 
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.syntax.all.*

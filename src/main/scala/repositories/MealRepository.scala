@@ -13,12 +13,7 @@ import java.util.UUID
 object MealRepository {
 
   // Other database-related methods
-  def getAllMeals(): DBIO[Seq[Meal]] = TableQuery[Meals].result
-
-  def getMealById(id: UUID): DBIO[Option[Meal]] = {
-    val query = TableQuery[Meals]
-    query.filter(_.id === id).result.headOption
-  }
+  def retrieveAllMeals(): DBIO[Seq[Meal]] = TableQuery[Meals].result
 
   // Insert a meal into the database
   def insertMeal(meal: MealInput): DBIO[Option[Meal]] = {
@@ -30,7 +25,17 @@ object MealRepository {
     // Insert the meal into the database and return the inserted meal (with generated ID)
     for {
       _ <- query += mealWithId // Insert the meal into the database
-      insertedMeal <- getMealById(mealWithId.id) // Fetch the meal by its generated ID
+      insertedMeal <- retrieveMealById(mealWithId.id) // Fetch the meal by its generated ID
     } yield insertedMeal
+  }
+
+  def retrieveMealById(id: UUID): DBIO[Option[Meal]] = {
+    val query = TableQuery[Meals]
+    query.filter(_.id === id).result.headOption
+  }
+
+  def removeMealById(id: UUID): DBIO[Int] = {
+    val query = TableQuery[Meals]
+    query.filter(_.id === id).delete  // Deletes meal where ID matches
   }
 }

@@ -61,5 +61,15 @@ object MealController {
     }
     .tag("meals")
 
-  val mealEndpoints = List(postEndpoint, getsEndpoint, getEndpoint)
+  val deleteEndpoint = endpoint.delete
+    .in("meals" / path[UUID]("meal_uuid"))
+    .serverLogic[IO] { mealUuid =>
+      MealService.deleteMeal(mealUuid).map {
+        case Right(()) => Right(())  // HTTP 204 on success
+        case Left(errorMessage) => Left(()) // HTTP 400 or 404 with error message
+      }
+    }
+    .tag("meals")
+
+  val mealEndpoints = List(postEndpoint, getsEndpoint, getEndpoint, deleteEndpoint)
 }

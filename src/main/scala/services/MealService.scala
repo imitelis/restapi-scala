@@ -29,7 +29,7 @@ object MealService {
   }
 
   def getMeals(): IO[Either[String, Seq[Meal]]] = {
-    val getAllMealsAction = MealRepository.getAllMeals()
+    val getAllMealsAction = MealRepository.retrieveAllMeals()
 
     IO.fromFuture(IO {
       db.run(getAllMealsAction).transform {
@@ -40,13 +40,24 @@ object MealService {
   }
 
   def getMeal(mealUuid: UUID): IO[Either[String, Meal]] = {
-    val mealAction = MealRepository.getMealById(mealUuid)
+    val mealAction = MealRepository.retrieveMealById(mealUuid)
 
     // Run the DB action and handle the result
     IO.fromFuture(IO {
       db.run(mealAction).map {
         case Some(meal) => Right(meal)  // Meal found
         case None        => Left("Meal not found") // Meal not found
+      }
+    })
+  }
+
+  def deleteMeal(mealUuid: UUID): IO[Either[String, Unit]] = {
+    val deleteAction = MealRepository.removeMealById(mealUuid)
+
+    IO.fromFuture(IO {
+      db.run(deleteAction).map {
+        case _ => Right(()) // Meal deleted successfully
+        case None => Left("Meal not found") // No rows affected (i.e., meal not found)
       }
     })
   }

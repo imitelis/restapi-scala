@@ -18,46 +18,66 @@ object MealService {
 
   // Service method to insert a meal and return an IO
   def postMeal(meal: MealInput): IO[Either[String, Option[Meal]]] = {
-    val insertMealAction = MealRepository.insertMeal(meal)
+    val postAction = MealRepository.insertMeal(meal)
 
     IO.fromFuture(IO {
-      db.run(insertMealAction).transform {
-        case Success(newMeal)  => Success(Right(newMeal))                                     // Successfully inserted
-        case Failure(ex) => Success(Left(s"Error inserting meal: ${ex.getMessage}")) // Handle error
+      db.run(postAction).map {
+        case Some(meal) => Right(Some(meal))  // Meal found
+        case None       => Right(None)
+      }.recover {
+        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}") // Handle error
       }
     })
   }
 
-  def getMeals(): IO[Either[String, Seq[Meal]]] = {
-    val getAllMealsAction = MealRepository.retrieveAllMeals()
+  def getMeals(): IO[Either[String, Option[Seq[Meal]]]] = {
+    val getAction = MealRepository.retrieveAllMeals()
 
     IO.fromFuture(IO {
-      db.run(getAllMealsAction).transform {
-        case Success(meals) => Success(Right(meals))                                    // Successfully fetched the meals
-        case Failure(ex)    => Success(Left(s"Error fetching meals: ${ex.getMessage}")) // Handle error
+      db.run(getAction).map {
+        case Some(meals) => Right(Some(meals))  // Meal found
+        case None        => Right(None)
+      }.recover {
+        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}") // Handle error
       }
     })
   }
 
-  def getMeal(mealUuid: UUID): IO[Either[String, Meal]] = {
-    val mealAction = MealRepository.retrieveMealById(mealUuid)
+  def getMeal(mealUuid: UUID): IO[Either[String, Option[Meal]]] = {
+    val getAction = MealRepository.retrieveMealById(mealUuid)
 
-    // Run the DB action and handle the result
     IO.fromFuture(IO {
-      db.run(mealAction).map {
-        case Some(meal) => Right(meal)  // Meal found
-        case None        => Left("Meal not found") // Meal not found
+      db.run(getAction).map {
+        case Some(meal) => Right(Some(meal))
+        case None       => Right(None)
+      }.recover {
+        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}") // Handle error
       }
     })
   }
+
+  def patchMeal(mealUuid: UUID, meal: MealInput): IO[Either[String, Option[Meal]]] = {
+  val patchAction = MealRepository.updateMeal(mealUuid, meal)
+
+  IO.fromFuture(IO {
+    db.run(patchAction).map {
+      case Some(meal) => Right(Some(meal))
+      case None       => Right(None)
+    }.recover {
+      case ex: Exception => Left(s"Error updating meal: ${ex.getMessage}") // Handle error
+    }
+  })
+}
 
   def deleteMeal(mealUuid: UUID): IO[Either[String, Unit]] = {
     val deleteAction = MealRepository.removeMealById(mealUuid)
 
     IO.fromFuture(IO {
       db.run(deleteAction).map {
-        case _ => Right(()) // Meal deleted successfully
-        case None => Left("Meal not found") // No rows affected (i.e., meal not found)
+        case Some(_) => Right(())  // Meal deleted successfully
+        case None    => Left("Meal not found")  // No meal found (not deleted)
+      }.recover {
+        case ex: Exception => Left(s"Error deleting meal: ${ex.getMessage}") // Handle error
       }
     })
   }

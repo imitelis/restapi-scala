@@ -31,9 +31,8 @@ object MealController {
     .serverLogic[IO] { meal =>
       // Call MealService to insert the meal and return the result
       MealService.postMeal(meal).map {
-        case Right(newMeal) => Right(newMeal) // Return the created meal
-        case Left(errorMessage) =>
-          Left(()) // Handle error (you could improve this with more detailed error handling)
+        case Right(newMeal)     => Right(newMeal) // Return the created meal
+        case Left(errorMessage) => Left(Status.InternalServerError) // Handle error
       }
     }
     .tag("meals")
@@ -43,8 +42,8 @@ object MealController {
     .out(jsonBody[Option[Seq[Meal]]])
     .serverLogic[IO] { _ =>
       MealService.getMeals().map {
-        case Right(meals)       => Right(meals) // Return the list of meals
-        case Right(None)        => Left(Status.NotFound) // Return the list of meals
+        case Right(meals)       => Right(meals)
+        case Right(None)        => Left((StatusCode.NotFound, "Meal not found"))
         case Left(errorMessage) => Left(Status.InternalServerError)
       }
     }
@@ -55,26 +54,22 @@ object MealController {
     .out(jsonBody[Option[Meal]])
     .serverLogic[IO] { mealUuid =>
       MealService.getMeal(mealUuid).map {
-        case Right(meal)       => Right(meal)
-        case Left(errorMessage) =>
-        Left((
-          StatusCode.NotFound, 
-          errorMessage
-        ))
+        case Right(Some(meal))  => Right(Some(meal))
+        case Right(None)        => Left((StatusCode.NotFound, "Meal not found"))
+        case Left(err)          => Left((StatusCode.InternalServerError, err))
       }
     }
     .tag("meals")
 
   val patchEndpoint = endpoint.patch
     .in("meals" / path[UUID]("meal_uuid"))
-    .in(jsonBody[MealInput])  // Accept a Meal object in the request body
-    .out(jsonBody[Option[Meal]]) // Return the created Meal as response
+    .in(jsonBody[MealInput])
+    .out(jsonBody[Option[Meal]])
     .serverLogic[IO] { (mealUuid, meal) =>
-      // Call MealService to insert the meal and return the result
       MealService.patchMeal(mealUuid, meal).map {
-        case Right(newMeal) => Right(newMeal) // Return the created meal
-        case Left(errorMessage) =>
-          Left(()) // Handle error (you could improve this with more detailed error handling)
+        case Right(newMeal) => Right(newMeal)
+        case Right(None)    => Left((StatusCode.NotFound, "Meal not found"))
+        case Left(err)      => Left((StatusCode.InternalServerError, err))
       }
     }
     .tag("meals")
@@ -83,8 +78,9 @@ object MealController {
     .in("meals" / path[UUID]("meal_uuid"))
     .serverLogic[IO] { mealUuid =>
       MealService.deleteMeal(mealUuid).map {
-        case Right(()) => Right(())  // HTTP 204 on success
-        case Left(errorMessage) => Left(()) // HTTP 400 or 404 with error message
+        case Right(())      => Right(())
+        case Left(None)    => Left((StatusCode.NotFound, "Meal not found"))
+        case Left(err)      => Left((StatusCode.InternalServerError, err))
       }
     }
     .tag("meals")

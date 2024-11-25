@@ -35,10 +35,10 @@ object MealService {
 
     IO.fromFuture(IO {
       db.run(getAction).map {
-        case Some(meals) => Right(Some(meals))  // Meal found
+        case Some(meals) => Right(Some(meals))
         case None        => Right(None)
       }.recover {
-        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}") // Handle error
+        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}")
       }
     })
   }
@@ -51,7 +51,7 @@ object MealService {
         case Some(meal) => Right(Some(meal))
         case None       => Right(None)
       }.recover {
-        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}") // Handle error
+        case ex: Exception => Left(s"Error getting meal: ${ex.getMessage}")
       }
     })
   }
@@ -64,7 +64,7 @@ object MealService {
       case Some(meal) => Right(Some(meal))
       case None       => Right(None)
     }.recover {
-      case ex: Exception => Left(s"Error updating meal: ${ex.getMessage}") // Handle error
+      case ex: Exception => Left(s"Error updating meal: ${ex.getMessage}")
     }
   })
 }
@@ -74,10 +74,10 @@ object MealService {
 
     IO.fromFuture(IO {
       db.run(deleteAction).map {
-        case Some(_) => Right(())  // Meal deleted successfully
-        case None    => Left("Meal not found")  // No meal found (not deleted)
+        case Some(_) => Right(())
+        case None    => Left("Meal not found")
       }.recover {
-        case ex: Exception => Left(s"Error deleting meal: ${ex.getMessage}") // Handle error
+        case ex: Exception => Left(s"Error deleting meal: ${ex.getMessage}")
       }
     })
   }

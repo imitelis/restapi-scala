@@ -79,7 +79,6 @@ object MealController {
     .serverLogic[IO] { mealUuid =>
       MealService.deleteMeal(mealUuid).map {
         case Right(())      => Right(())
-        case Left(None)    => Left((StatusCode.NotFound, "Meal not found"))
         case Left(err)      => Left((StatusCode.InternalServerError, err))
       }
     }

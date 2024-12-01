@@ -17,7 +17,7 @@ implicit val ec: ExecutionContext = global
 
 object DatabaseConfig {
   // Database URL for SQLite
-  val dbUrl = "jdbc:sqlite:meals.db"
+  val dbUrl = sys.env.getOrElse("DB_URL", "jdbc:sqlite:meals.db")
 
   // Load SQLite JDBC driver
   Class.forName("org.sqlite.JDBC")

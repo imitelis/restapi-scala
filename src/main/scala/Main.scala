@@ -33,13 +33,8 @@ object Main extends IOApp:
   val corsConfig = CORS.policy.withAllowOriginAll
   val corsRoutes = corsConfig(allRoutes)
 
-  // Apply Host Middleware to restrict requests based on Host header
-  // val hostRestrictedRoutes = HostMiddleware.checkHost("your-domain.com")(corsRoutes)
-
   // Create a connection to the database
   val connection = DatabaseConfig.createTables()
-
-  println("Database created at: meals.db")
 
   override def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO]

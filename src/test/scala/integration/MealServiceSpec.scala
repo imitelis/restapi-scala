@@ -34,7 +34,7 @@ class MealServiceSpec extends AnyFlatSpec with Matchers {
     setupDatabase().unsafeRunSync()
 
     // Create a meal input
-    val mealInput = MealInput("pizza", 24000, List("cheese", "tomato", "sour"))
+    val mealInput = MealInput("pizza", 24000, List("cheese", "tomato", "flour"))
     val result: IO[Either[String, Option[Meal]]] = MealService.postMeal(mealInput)
     val evaluatedResult = result.unsafeRunSync()
 
@@ -43,7 +43,7 @@ class MealServiceSpec extends AnyFlatSpec with Matchers {
       case Right(Some(meal)) =>
         meal.name.shouldBe("pizza")
         meal.servings.shouldBe(24000)
-        meal.ingredients.shouldBe(List("cheese", "tomato", "sour"))
+        meal.ingredients.shouldBe(List("cheese", "tomato", "flour"))
         mealId = meal.id
       case _ => fail("Meal insertion failed")
     }
@@ -60,10 +60,10 @@ class MealServiceSpec extends AnyFlatSpec with Matchers {
     // Assert the meal is found and matches the original inserted meal
     evaluatedRetrievedMeal match {
       case Right(Some(meal)) =>
-        meal.id shouldBe mealId // Ensure the correct meal ID
+        meal.id shouldBe mealId
         meal.name shouldBe "pizza"
         meal.servings shouldBe 24000
-        meal.ingredients shouldBe List("cheese", "tomato", "sour")
+        meal.ingredients shouldBe List("cheese", "tomato", "flour")
       case _ => fail("Meal retrieval failed")
     }
   }
@@ -82,10 +82,10 @@ class MealServiceSpec extends AnyFlatSpec with Matchers {
     // Assert the patch operation was successful
     evaluatedPatchResult match {
       case Right(Some(meal)) =>
-        meal.id shouldBe mealId  // Ensure the correct meal ID is returned
-        meal.name shouldBe "Updated Pizza"  // Assert updated name
-        meal.servings shouldBe 30000  // Assert updated servings
-        meal.ingredients shouldBe List("cheese", "tomato", "olives")  // Assert updated ingredients
+        meal.id shouldBe mealId
+        meal.name shouldBe "Updated Pizza"
+        meal.servings shouldBe 30000
+        meal.ingredients shouldBe List("cheese", "tomato", "olives")
       case _ => fail("Meal patching failed")
     }
   }

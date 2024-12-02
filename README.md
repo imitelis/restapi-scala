@@ -7,7 +7,8 @@
   *  In order to run the project without compiling use `sbt run`
   *  You can check the server docs APIs visiting `0.0.0.0:8080/docs`
   *  When you need to clean the sbt cache you can use `sbt clean`
-  *  And for running all tests in the project and log use `sbt testOnly test`
+  *  For running all tests in the project and log use `sbt testOnly test`
+  *  And for packaging the project you can use `sbt package`
 
 **WIP**
   *  To run compiled build use `java -jar scala-server.jar` or `./scala-server.jar`

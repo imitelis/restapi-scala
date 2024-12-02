@@ -4,7 +4,7 @@ import config._
 import models._
 import bases._
 
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.IO
 import slick.jdbc.SQLiteProfile.api._
 import io.circe.KeyEncoder.encodeKeyUUID
 

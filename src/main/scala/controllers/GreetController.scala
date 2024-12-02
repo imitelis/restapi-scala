@@ -2,7 +2,7 @@ package controllers
 
 import sttp.tapir._
 import cats.syntax.all.*
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.IO
 
 import io.circe.generic.auto._   // For automatic Encoder/Decoder derivation
 import sttp.tapir.json.circe._   // For Tapir-Circe integration

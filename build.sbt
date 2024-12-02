@@ -44,8 +44,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.5.12",
 
   // Testing
-  "org.scalatest" %% "scalatest" % "3.2.9"
-  
+  "org.scalatest" %% "scalatest" % "3.2.9" 
 )
 
 // Enable the `scala3` compiler options for Scala 3

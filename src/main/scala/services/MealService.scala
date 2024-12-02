@@ -5,7 +5,7 @@ import models._
 import config._
 import repositories._
 
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.IO
 import slick.jdbc.SQLiteProfile.api._
 
 import java.util.UUID

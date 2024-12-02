@@ -1,6 +1,7 @@
 // src/config/Database.scala
 package config
 
+import cats.effect.IO
 import slick.dbio.DBIO
 import slick.jdbc.SQLiteProfile.api._
 
@@ -18,22 +19,23 @@ implicit val ec: ExecutionContext = global
 object DatabaseConfig {
   // Database URL for SQLite
   val dbUrl = sys.env.getOrElse("DB_URL", "jdbc:sqlite:meals.db")
+  val dbTestingUrl = sys.env.getOrElse("DB_TESTING_URL", "jdbc:sqlite::memory:")
 
   // Load SQLite JDBC driver
   Class.forName("org.sqlite.JDBC")
-
-  // Create a database connection
-  def createConnection(): Connection = {
-    DriverManager.getConnection(dbUrl)
-  }
 
   // Create and return a Slick Database instance
   def getDatabase(): Database = {
     Database.forURL(dbUrl, driver = "org.sqlite.JDBC")
   }
 
+  // Create and return a Slick Database instance
+  def getTestingDatabase(): Database = {
+    Database.forURL(dbTestingUrl, driver = "org.sqlite.JDBC")
+  }
+
   // Create the meals table if it doesn't already exist
-  def createTables(): Unit = {
+  def createTables(): IO[Unit] = {
     val db = getDatabase()
 
     // Run the migration to create the table
@@ -41,13 +43,24 @@ object DatabaseConfig {
       Meals.query.schema.createIfNotExists // Create table if it doesn't exist
     )
 
-    // Execute the setup action
-    val setupFuture = db.run(setup)
-    Await.result(
-      setupFuture,
-      scala.concurrent.duration.Duration(2, "seconds")
-    ) // Wait for the setup to complete
+    // Convert the DBIO action to IO and execute it
+    IO.fromFuture(IO(db.run(setup)))
+      .flatMap(_ => IO.delay(db.close())) // Close the database connection wrapped in IO
+      .void // Return IO[Unit] to match the method's return type
+  }
 
-    db.close() // Close the database connection
+  // Create the test-meals table if it doesn't already exist
+  def createTestingTables(): IO[Unit] = {
+    val db = getTestingDatabase()
+
+    // Run the migration to create the table
+    val setup = DBIO.seq(
+      Meals.query.schema.createIfNotExists // Create table if it doesn't exist
+    )
+
+    // Convert the DBIO action to IO and execute it
+    IO.fromFuture(IO(db.run(setup)))
+      .flatMap(_ => IO.delay(db.close())) // Close the database connection wrapped in IO
+      .void // Return IO[Unit] to match the method's return type
   }
 }

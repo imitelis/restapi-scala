@@ -4,7 +4,7 @@ import sttp.tapir._
 import sttp.model.{HeaderNames, StatusCode}
 
 import cats.syntax.all.*
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.IO
 
 import io.circe.generic.auto._   // For automatic Encoder/Decoder derivation
 import sttp.tapir.json.circe._   // For Tapir-Circe integration
@@ -17,7 +17,6 @@ import config._
 import bases._
 import services._
 import repositories._
-
 
 import sttp.tapir.server._
 import org.http4s.Status

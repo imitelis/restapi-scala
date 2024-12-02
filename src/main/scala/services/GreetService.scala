@@ -1,7 +1,7 @@
 package services
 
 import bases._
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.IO
 
 object GreetService {
   def getWelcome(): IO[Either[String, Greeting]] = {
